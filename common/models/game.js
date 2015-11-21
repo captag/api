@@ -1,3 +1,7 @@
+var async = require('async');
+var Chance = require('chance'), chance = new Chance();
+
+
 module.exports = function(Game) {
 
   Game.remoteMethod ('createFromTemplate', {
@@ -56,20 +60,63 @@ module.exports = function(Game) {
             status: 'new'
           };
 
-          Game.create(game, function (err, data) {
+          Game.create(game, function (err, newGame) {
             if (err) {
               return cb(err, null);
             } else {
-              // Create tags from the locations related to the game template
-              // and relate the created tags to the game
-              var locations = gameTemplate.locations();
-              locations.forEach(function (location) {
-                createTag(location, data, cb);
-              });
 
-              return cb(null, data);
+              async.waterfall(
+                [
+                  // Create tags from the locations related to the game template
+                  // and relate the created tags to the game
+                  function (cb) {
+
+                    var tags = [];
+                    var createTagCallback = function (err, newTag) {
+                      tags.push(newTag);
+                    };
+                    var locations = gameTemplate.locations();
+                    locations.forEach(function (location) {
+                      createTag(location, newGame, createTagCallback);
+                    });
+
+                    cb(null, tags);
+                  },
+                  // Create teams
+                  function (tags, cb) {
+
+                    var teams = [];
+                    var createTeamCallback = function (err, newTeam) {
+                      teams.push(newTeam);
+                    };
+                    for (var i = 0; i < teamCount; i++) {
+                        createTeam(newGame, createTeamCallback);
+                    }
+
+                    cb(null, tags, teams);
+                  },
+                  // Create scores
+                  function (tags, teams, cb) {
+
+                    var createScoreCallback = function (err, newScore) {};
+                    tags.forEach(function (tag) {
+                      teams.forEach(function (team) {
+                        createScore(tag, team, createScoreCallback);
+                      });
+                    });
+
+                    cb(null, 'done');
+                  }
+                ],
+                function (err, result) {
+                  console.log('tags, teams and scores created');
+                }
+              );
+
+              return cb(null, newGame);
             }
-          });
+          }
+        );
       }
     );
   };
@@ -89,16 +136,44 @@ module.exports = function(Game) {
       gameId: game.id
     };
 
-    Game.app.models.Tag.create(tag, function (error, data) {
-      if (error) {
-        return cb(error, null);
-      }
-    });
+    Game.app.models.Tag.create(tag, cb);
   }
 
 
+  /**
+   * Creates a new team using the given game. The team name and color is random.
+   */
   function createTeam (game, cb) {
 
-    
+    var teamName = chance.province({
+      full: true
+    });
+
+    var teamColor = chance.color({
+      format: 'hex',
+      casing: 'upper'
+    });
+
+    var team = {
+      name: teamName,
+      color: teamColor,
+      gameId: game.id
+    };
+
+    Game.app.models.Team.create(team, cb);
+  }
+
+
+  /**
+   * Creates a new score using the given tag and team.
+   */
+  function createScore (tag, team, cb) {
+
+    var score = {
+      tagId: tag.id,
+      teamId: team.id
+    };
+
+    Game.app.models.Score.create(score, cb);
   }
 };

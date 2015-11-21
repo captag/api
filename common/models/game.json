@@ -20,6 +20,11 @@
   },
   "validations": [],
   "relations": {
+    "players": {
+      "type": "hasMany",
+      "model": "Player",
+      "foreignKey": "gameId"
+    },
     "tags": {
       "type": "hasMany",
       "model": "Tag",

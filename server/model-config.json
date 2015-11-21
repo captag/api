@@ -13,24 +13,25 @@
       "./mixins"
     ]
   },
-  "User": {
-    "dataSource": "db"
-  },
   "AccessToken": {
-    "dataSource": "db",
+    "dataSource": "captag-db",
     "public": false
   },
   "ACL": {
-    "dataSource": "db",
+    "dataSource": "captag-db",
     "public": false
   },
   "RoleMapping": {
-    "dataSource": "db",
+    "dataSource": "captag-db",
     "public": false
   },
   "Role": {
-    "dataSource": "db",
+    "dataSource": "captag-db",
     "public": false
+  },
+  "User": {
+    "dataSource": "captag-db",
+    "public": true
   },
   "Game": {
     "dataSource": "captag-db",
@@ -49,6 +50,14 @@
     "public": true
   },
   "Location": {
+    "dataSource": "captag-db",
+    "public": true
+  },
+  "Player": {
+    "dataSource": "captag-db",
+    "public": true
+  },
+  "Score": {
     "dataSource": "captag-db",
     "public": true
   }

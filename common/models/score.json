@@ -1,40 +1,35 @@
 {
-  "name": "Team",
+  "name": "Score",
   "base": "PersistedModel",
   "idInjection": true,
   "options": {
     "validateUpsert": true
   },
   "properties": {
-    "name": {
+    "tagId": {
       "type": "string",
       "required": true
     },
-    "color": {
-      "type": "string",
-      "required": true
-    },
-    "gameId": {
+    "teamId": {
       "type": "string",
       "required": true
     }
   },
   "validations": [],
   "relations": {
-    "game": {
+    "tag": {
       "type": "belongsTo",
-      "model": "Game",
-      "foreignKey": "gameId"
+      "model": "Tag",
+      "foreignKey": "tagId"
     },
-    "members": {
-      "type": "hasMany",
-      "model": "Player",
+    "team": {
+      "type": "belongsTo",
+      "model": "Team",
       "foreignKey": "teamId"
     },
-    "scores": {
-      "type": "hasMany",
-      "model": "Score",
-      "foreignKey": "teamId"
+    "players": {
+      "type": "hasAndBelongsToMany",
+      "model": "Player"
     }
   },
   "acls": [],

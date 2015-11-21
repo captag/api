@@ -1,32 +1,20 @@
 {
-  "name": "Tag",
+  "name": "Player",
   "base": "PersistedModel",
   "idInjection": true,
   "options": {
     "validateUpsert": true
   },
   "properties": {
-    "name": {
-      "type": "string",
-      "required": true
-    },
-    "country": {
-      "type": "string",
-      "required": true
-    },
-    "city": {
-      "type": "string",
-      "required": true
-    },
-    "zipCode": {
-      "type": "string",
-      "required": true
-    },
-    "geoPoint": {
-      "type": "geopoint",
-      "required": true
-    },
     "gameId": {
+      "type": "string",
+      "required": true
+    },
+    "teamId": {
+      "type": "string",
+      "required": true
+    },
+    "userId": {
       "type": "string",
       "required": true
     }
@@ -38,10 +26,19 @@
       "model": "Game",
       "foreignKey": "gameId"
     },
+    "team": {
+      "type": "belongsTo",
+      "model": "Team",
+      "foreignKey": "teamId"
+    },
+    "user": {
+      "type": "belongsTo",
+      "model": "User",
+      "foreignKey": "userId"
+    },
     "scores": {
-      "type": "hasMany",
-      "model": "Score",
-      "foreignKey": "tagId"
+      "type": "hasAndBelongsToMany",
+      "model": "Score"
     }
   },
   "acls": [],
