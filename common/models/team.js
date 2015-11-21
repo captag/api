@@ -93,6 +93,69 @@ module.exports = function(Team) {
   };
 
 
+  Team.remoteMethod ('leave', {
+    description: 'Leaves this team',
+    accepts: [
+      {
+        arg: 'id',
+        description: [
+          'The id of the team to leave.'
+        ],
+        type: 'string',
+        require: true,
+        'http': {
+          source: 'path'
+        }
+      },
+      {
+        arg: 'data',
+        description: 'TODO Write description',
+        type: 'object',
+        required: true,
+        'http': {
+          source: 'body'
+        }
+      }
+    ],
+    returns: {
+      arg: 'result',
+      root: true,
+      description: 'The updated team including game and members relations'
+    },
+    http: {
+      path: '/:id/leave',
+      verb: 'post'
+    }
+  });
+
+  Team.leave = function (id, data, cb) {
+
+    var userId = data.userId;
+    if (!userId) {
+      var error = new Error('userId not set');
+      error.status = '400';
+      return cb(error);
+    }
+
+    // Get player where teamId and userId match
+    Team.app.models.Player.destroyAll(
+      {
+        'teamId': id,
+        'userId': userId
+      },
+      function (err, info) {
+
+        if (err) {
+          return cb(err);
+        }
+
+        // Return the updated team including the game and member relations
+        Team.findById(id, {include: ['game', 'members']}, cb);
+      }
+    );
+  };
+
+
   /**
    * Creates a new player using the given game, team and userId.
    */
