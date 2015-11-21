@@ -1,0 +1,36 @@
+{
+  "name": "Game",
+  "base": "PersistedModel",
+  "idInjection": true,
+  "options": {
+    "validateUpsert": true
+  },
+  "properties": {
+    "name": {
+      "type": "string",
+      "required": true
+    },
+    "status": {
+      "type": "string",
+      "required": true
+    },
+    "image": {
+      "type": "string"
+    }
+  },
+  "validations": [],
+  "relations": {
+    "tags": {
+      "type": "hasMany",
+      "model": "Tag",
+      "foreignKey": "gameId"
+    },
+    "teams": {
+      "type": "hasMany",
+      "model": "Team",
+      "foreignKey": "gameId"
+    }
+  },
+  "acls": [],
+  "methods": {}
+}

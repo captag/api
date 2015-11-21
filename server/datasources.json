@@ -1,0 +1,13 @@
+{
+  "db": {
+    "name": "db",
+    "connector": "memory"
+  },
+  "captag-db": {
+    "url": "mongodb://192.168.99.100:27017",
+    "database": "captag-db-dev",
+    "name": "captag-db",
+    "connector": "mongodb",
+    "defaultForType": "mongodb"
+  }
+}

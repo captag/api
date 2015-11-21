@@ -1,0 +1,27 @@
+{
+  "name": "GameTemplate",
+  "base": "PersistedModel",
+  "idInjection": true,
+  "options": {
+    "validateUpsert": true
+  },
+  "properties": {
+    "name": {
+      "type": "string",
+      "required": true
+    },
+    "image": {
+      "type": "string",
+      "required": true
+    }
+  },
+  "validations": [],
+  "relations": {
+    "locations": {
+      "type": "hasAndBelongsToMany",
+      "model": "Location"
+    }
+  },
+  "acls": [],
+  "methods": {}
+}
